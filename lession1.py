@@ -103,7 +103,6 @@ Let's create some more test cases for the variations listed above. We'll store a
 
 """
 
-
 # Test Cases append in list:
 tests = [
     {'input': {'cards': [13, 11, 10, 7, 4, 3, 1, 0], 'query': 7}, 'output': 3},
@@ -113,10 +112,9 @@ tests = [
     {'input': {'cards': [6], 'query': 6}, 'output': 0},
     {'input': {'cards': [9, 7, 5, 2, -9], 'query': 4}, 'output': -1},
     {'input': {'cards': [], 'query': 7}, 'output': -1},
-    {'input': {'cards': [8, 8, 6, 6, 6, 6, 6, 3, 2, 2, 2, 0, 0, 0], 'query': 3},'output': 7},
-    {'input': {'cards': [8, 8, 6, 6, 6, 6, 6, 6, 3, 2, 2, 2, 0, 0, 0],'query': 6},'output': 2}
+    {'input': {'cards': [8, 8, 6, 6, 6, 6, 6, 3, 2, 2, 2, 0, 0, 0], 'query': 3}, 'output': 7},
+    {'input': {'cards': [8, 8, 6, 6, 6, 6, 6, 6, 3, 2, 2, 2, 0, 0, 0], 'query': 6}, 'output': 2}
 ]
-
 
 """
 The problem statement does not specify what to do if the list `cards` does not contain the number `query`. 
@@ -161,19 +159,10 @@ It's likely that you will find some parts of the solution difficult to express, 
 The more clearly you are able to express your thoughts, the easier it will be for you to turn into code.
 """
 
-
-
-
-
-
-
-
-
-
-
-
-from jovian.pythondsa import evaluate_test_cases,evaluate_test_case
+from jovian.pythondsa import evaluate_test_cases, evaluate_test_case
 import time
+
+
 # results = evaluate_test_cases(locate_card,tests)
 
 # Brute force solution
@@ -191,15 +180,15 @@ def locate_card(cards, query):
             position = position + 1
             if position == len(cards):
                 print(f"Time taken for solution 1: {time.time() - start}")
-                return  -1
+                return -1
         else:
-            print(f"Time taken for solution 1: {time.time()-start}")
+            print(f"Time taken for solution 1: {time.time() - start}")
             return -1
 
 
 # Solution -2
 
-def _locate_card(cards,query):
+def _locate_card(cards, query):
     start = time.time()
     position = 0
     while position < len(cards):
@@ -211,9 +200,7 @@ def _locate_card(cards,query):
     return -1
 
 
-
-
-first_case = {'input': {'cards': [13, 11, 10, 8,7, 4, 3, 1, 0], 'query': 4}, 'output': 5}
+first_case = {'input': {'cards': [13, 11, 10, 8, 7, 4, 3, 1, 0], 'query': 4}, 'output': 5}
 
 # result = locate_card(first_case['input']['cards'],first_case['input']['query'])
 # print(result)
@@ -280,31 +267,33 @@ Here's how binary search can be applied to our problem:
 
 """
 
+
 # Binary Search
-def _binary_locate_card(cards,query):
+def _binary_locate_card(cards, query):
     start = time.time()
-    low,high = 0, len(cards)-1 # Define search space
+    low, high = 0, len(cards) - 1  # Define search space
 
     while low <= high:
-        middle_index = (low+high) // 2 # Find the relative middle index using floor division
+        middle_index = (low + high) // 2  # Find the relative middle index using floor division
         middle_number = cards[middle_index]
 
         print(f"low: {low} | high: {high} | middle_index: {middle_index} | middle_number: {middle_number}")
 
-        if middle_number == query :
+        if middle_number == query:
             print(f"Time taken for solution 3: {time.time() - start}")
             return middle_index
-        elif middle_number < query :
-            high = middle_index -1
+        elif middle_number < query:
+            high = middle_index - 1
         elif middle_number > query:
             low = middle_index + 1
     print(f"Time taken for solution 3: {time.time() - start}")
     return -1
 
+
 # get_match_index = _binary_locate_card(first_case['input']['cards'],first_case['input']['query'])
 # print(get_match_index)
 
-evaluate_test_cases(_binary_locate_card,tests) # TOTAL: 9, PASSED: 8, FAILED: 1
+# evaluate_test_cases(_binary_locate_card,tests) # TOTAL: 9, PASSED: 8, FAILED: 1
 # Time taken for solution 3: 1.1444091796875e-05
 # Time taken for solution 2: 5.7220458984375e-06
 # Time taken for solution 1: 6.198883056640625e-06
@@ -326,3 +315,42 @@ To make it easier, we'll define a helper function called `test_location`,
 which will take the list `cards`, the `query` and `mid` as inputs.
 
 """
+
+
+# 9,8,7,6,5,4,3,2,1
+#
+# q = 5
+# mid = 4
+# Binary search with handled error case
+
+def test_location(cards, query, middle_index):
+    middle_number = cards[middle_index]
+    # print("middle_index:", middle_index, ", middle_number:", middle_number)
+    if middle_number == query:
+        # Check for the first occurrence if number are duplicate
+        if middle_index - 1 >= 0 and cards[middle_index - 1] == query:
+            return 'left'
+        else:
+            return 'found'
+    elif middle_number < query:
+        return "left"
+    elif middle_number > query:
+        return "right"
+
+
+def _binary_locate_card2(cards, query):
+    low, high = 0, len(cards) - 1
+    while low <= high:
+        middle_index = (low + high) // 2
+        result = test_location(cards, query, middle_index)
+        if result == 'found':
+            return middle_index
+        elif result == 'left':
+            high = middle_index - 1
+        elif result == "right":
+            low = middle_index + 1
+    return -1
+
+
+# evaluate_test_case(_binary_locate_card2,first_case)
+evaluate_test_cases(_binary_locate_card2, tests)

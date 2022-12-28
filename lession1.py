@@ -200,7 +200,7 @@ def _locate_card(cards, query):
     return -1
 
 
-first_case = {'input': {'cards': [13, 11, 10, 8, 7, 4, 3, 1, 0], 'query': 4}, 'output': 5}
+# first_case = {'input': {'cards': [13, 11, 10, 8, 7, 4, 3, 1, 0], 'query': 4}, 'output': 5}
 
 # result = locate_card(first_case['input']['cards'],first_case['input']['query'])
 # print(result)
@@ -212,23 +212,31 @@ first_case = {'input': {'cards': [13, 11, 10, 8, 7, 4, 3, 1, 0], 'query': 4}, 'o
 """
 ### 5. Analyze the algorithm's complexity and identify inefficiencies, if any.
 
-Recall this statement from  original question: _"Alice challenges Bob to pick out the card containing a given number by **turning over as few cards as possible**."_ We restated this requirement as: _"Minimize the number of times we access elements from the list `cards`"_
+Recall this statement from  original question:
+ _"Alice challenges Bob to pick out the card containing a given number by **turning over as few cards as possible**."
+ _ We restated this requirement as: _"Minimize the number of times we access elements from the list `cards`"_
 
 
-Before we can minimize the number, we need a way to measure it. Since we access a list element once in every iteration, for a list of size `N` we access the elements from the list up to `N` times. Thus, Bob may need to overturn up to `N` cards in the worst case, to find the required card. 
+Before we can minimize the number, we need a way to measure it. Since we access a list element once in every iteration, 
+for a list of size `N` we access the elements from the list up to `N` times. 
+Thus, Bob may need to overturn up to `N` cards in the worst case, to find the required card. 
 
-Suppose he is only allowed to overturn 1 card per minute, it may take him 30 minutes to find the required card if 30 cards are laid out on the table. Is this the best he can do? Is a way for Bob to arrive at the answer by turning over just 5 cards, instead of 30?
+Suppose he is only allowed to overturn 1 card per minute, it may take him 30 minutes to find the required card if 30 cards are laid out on the table. 
+Is this the best he can do? Is a way for Bob to arrive at the answer by turning over just 5 cards, instead of 30?
 
-The field of study concerned with finding the amount of time, space or other resources required to complete the execution of computer programs is called _the analysis of algorithms_. And the process of figuring out the best algorithm to solve a given problem is called _algorithm design and optimization_.
+The field of study concerned with finding the amount of time, space or other resources required to complete the execution of computer programs is called _the analysis of algorithms_. 
+And the process of figuring out the best algorithm to solve a given problem is called _algorithm design and optimization_.
 
 
 ### Complexity and Big O Notation
 
-> **Complexity** of an algorithm is a measure of the amount of time and/or space required by an algorithm for an input of a given size e.g. `N`. Unless otherwise stated, the term _complexity_ always refers to the worst-case complexity (i.e. the highest possible time/space taken by the program/algorithm to process an input).
+> **Complexity** of an algorithm is a measure of the amount of time and/or space required by an algorithm for an input of a given size e.g. `N`. 
+Unless otherwise stated, the term _complexity_ always refers to the worst-case complexity (i.e. the highest possible time/space taken by the program/algorithm to process an input).
 
 In the case of linear search:
 
-1. The _time complexity_ of the algorithm is `cN` for some fixed constant `c` that depends on the number of operations we perform in each iteration and the time taken to execute a statement. Time complexity is sometimes also called the _running time_ of the algorithm.
+1. The _time complexity_ of the algorithm is `cN` for some fixed constant `c` that depends on the number of operations we perform in each iteration and the time taken to execute a statement. 
+Time complexity is sometimes also called the _running time_ of the algorithm.
 
 2. The _space complexity_ is some constant `c'` (independent of `N`), since we just need a single variable `position` to iterate through the array, and it occupies a constant space in the computer's memory (RAM).
 
@@ -249,7 +257,7 @@ It would be great if Bob could somehow guess the card at the first attempt, but 
 
 
 The next best idea would be to pick a random card, and use the fact that the list is sorted, 
-to determine whether the target card lies to the left or right of it. In fact, if we pick the middle card, 
+to determine whether the query card lies to the left or right of it. In fact, if we pick the middle card, 
 we can reduce the number of additional cards to be tested to half the size of the list. Then, 
 we can simply repeat the process with each half. This technique is called binary search. 
 
@@ -325,7 +333,6 @@ which will take the list `cards`, the `query` and `mid` as inputs.
 
 def test_location(cards, query, middle_index):
     middle_number = cards[middle_index]
-    # print("middle_index:", middle_index, ", middle_number:", middle_number)
     if middle_number == query:
         # Check for the first occurrence if number are duplicate
         if middle_index - 1 >= 0 and cards[middle_index - 1] == query:
@@ -353,4 +360,187 @@ def _binary_locate_card2(cards, query):
 
 
 # evaluate_test_case(_binary_locate_card2,first_case)
-evaluate_test_cases(_binary_locate_card2, tests)
+# evaluate_test_cases(_binary_locate_card2, tests)
+
+
+"""
+### 9. Analyze the algorithm's complexity and identify inefficiencies, if any.
+
+Once again, let's try to count the number of iterations in the algorithm. 
+If we start out with an array of N elements, then each time the size of the array reduces to half for the next iteration, 
+until we are left with just 1 element.
+
+Initial length - `N`
+
+Iteration 1 - `N/2`
+
+Iteration 2 - `N/4` i.e. `N/2^2`
+
+Iteration 3 - `N/8` i.e. `N/2^3`
+
+...
+
+Iteration k - `N/2^k`
+
+
+Since the final length of the array is 1, we can find the 
+
+`N/2^k = 1`
+
+Rearranging the terms, we get
+
+`N = 2^k`
+
+Taking the logarithm
+
+`k = log N`
+
+Where `log` refers to log to the base 2. Therefore, our algorithm has the time complexity **O(log N)**. 
+This fact is often stated as: binary search _runs_ in logarithmic time. 
+You can verify that the space complexity of binary search is **O(1)**.
+
+
+
+## Generic Binary Search
+
+Here is the general strategy behind binary search, which is applicable to a variety of problems:
+
+1. Come up with a condition to determine whether the answer lies before, after or at a given position
+1. Retrieve the midpoint and the middle element of the list.
+2. If it is the answer, return the middle position as the answer.
+3. If answer lies before it, repeat the search with the first half of the list
+4. If the answer lies after it, repeat the search with the second half of the list.
+
+"""
+
+
+# Here is the generic algorithm for binary search, implemented in Python:
+def binary_search3(low, high, condition):  # Passing condition function as an argument
+    while low <= high:
+        middle_index = (low + high) // 2
+        result = condition(middle_index)
+        if result == 'found':
+            return middle_index
+        elif result == 'left':
+            high = middle_index - 1
+        else:
+            low = middle_index + 1
+    return -1
+
+
+def locate_card3(cards, query):
+    low, high = 0, len(cards) - 1
+
+    def condition(middle_index):
+        if cards[middle_index] == query:
+            if middle_index > 0 and cards[
+                middle_index - 1] == query:  # Search in left array if that same element occurs at one less index
+                return 'left'
+            else:
+                return 'found'
+        elif cards[middle_index] < query:  # Number < query
+            return 'left'
+        else:
+            return 'right'  # Number > query
+
+    return binary_search3(low, high, condition)
+
+
+# evaluate_test_case(locate_card3,first_case)
+# evaluate_test_cases(locate_card3, tests)
+
+
+"""
+The `binary_search` function can now be used to solve other problems too. It is a tested piece of logic.
+
+
+> **Question**: Given an array of integers cards sorted in ascending order, find the starting and ending position of a given number. 
+
+This differs from the problem in only two significant ways:
+
+1. The numbers are sorted in increasing order.
+2. We are looking for both first position and last position.
+
+Here's the full code for solving the question, obtained by making minor modifications to our previous function:
+
+"""
+
+
+def first_position(cards, query):
+    low, high = 0, len(cards) - 1
+
+    def condition(middle_index):
+        if cards[middle_index] == query:
+            if middle_index > 0 and cards[middle_index - 1] == query:
+                return 'left'
+            return 'found'
+        elif cards[middle_index] < query:
+            return 'right'
+        else:
+            return 'left'
+
+    return binary_search3(low, high, condition)
+
+
+def last_position(cards, query):
+    low, high = 0, len(cards) - 1
+
+    def condition(middle_index):
+        if cards[middle_index] == query:
+            if middle_index < len(cards) - 1 and cards[middle_index + 1] == query:
+                return 'right'
+            return 'found'
+        elif cards[middle_index] < query:
+            return 'right'
+        else:
+            return 'left'
+
+    return binary_search3(low, high, condition)
+
+
+def first_and_last_position(cards, query):
+    return first_position(cards, query), last_position(cards, query)
+
+# nums = [5, 7, 7, 8, 8, 10]
+# target = 8
+# ans = first_and_last_position(nums, target)
+# print(ans)
+
+asscending_sorted = [
+    {'input': {'cards': [5, 7, 7, 8, 8, 10], 'query': 7}, 'output': (1, 2)},
+    {'input': {'cards': [0, 1, 3, 4, 7, 10, 10, 11, 13], 'query': 10}, 'output': (5, 6)},
+    {'input': {'cards': [-1, 1, 2, 4], 'query': 4}, 'output': (3,3)},
+    {'input': {'cards': [-127, -9, -1, 3], 'query': -127}, 'output': (0,0)},
+    {'input': {'cards': [6], 'query': 6}, 'output': (0,0)},
+    {'input': {'cards': [-9, 2, 5, 7, 9], 'query': 4}, 'output': (-1,-1)},
+    {'input': {'cards': [], 'query': 7}, 'output': (-1,-1)},
+    {'input': {'cards': [0, 0, 0, 2, 2, 2, 3, 6, 6, 6, 6, 6, 8, 8], 'query': 3}, 'output': (6,6)},
+    {'input': {'cards': [0, 0, 0, 2, 2, 2, 3, 6, 6, 6, 6, 6, 6, 8, 8], 'query': 6}, 'output': (7,12)}
+]
+
+# for itr in asscending_sorted:
+#     cards = itr['input']['cards']
+#     query = itr['input']['query']
+#     ans = first_and_last_position(cards,query)
+#     print(f"cards: {cards} | query: {query} | ans: {ans}")
+
+
+"""
+## The Method - Revisited
+
+Here's a systematic strategy we've applied for solving the problem:
+
+1. State the problem clearly. Identify the input & output formats.
+2. Come up with some example inputs & outputs. Try to cover all edge cases.
+3. Come up with a correct solution for the problem. State it in plain English.
+4. Implement the solution and test it using example inputs. Fix bugs, if any.
+5. Analyze the algorithm's complexity and identify inefficiencies, if any.
+6. Apply the right technique to overcome the inefficiency. Repeat steps 3 to 6.
+
+Use this template for solving problems using this method: https://jovian.ai/aakashns/python-problem-solving-template
+
+This seemingly obvious strategy will help you solve almost any programming problem you will face in an interview or coding assessment. 
+
+The objective of this course is to rewire your brain to think using this method, by applying it over and over to different types of problems. 
+This is a course about thinking about problems systematically and turning those thoughts into code.
+"""

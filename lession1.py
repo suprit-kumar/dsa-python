@@ -1,7 +1,7 @@
 # Binary Search, Linked Lists and Complexity Analysis
 # ---------------------------------------------------
 
-https://jovian.ai/learn/data-structures-and-algorithms-in-python/lesson/lesson-1-binary-search-linked-lists-and-complexity
+(https://jovian.ai/learn/data-structures-and-algorithms-in-python/lesson/lesson-1-binary-search-linked-lists-and-complexity)
 
 
 '''

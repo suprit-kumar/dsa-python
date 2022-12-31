@@ -139,18 +139,19 @@ def test_location(cards, query, mid):
         if mid - 1 >= 0 and cards[mid - 1] == query:
             return 'left'
         return 'found'
-    elif mid_number < query :
+    elif mid_number < query:
         return 'left'
     elif mid_number > query:
         return 'right'
 
+
 # Solution 2
-def locate_card3(cards,query):
+def locate_card3(cards, query):
     low, high = 0, len(cards) - 1
 
     while low <= high:
         mid_index = (low + high) // 2
-        result = test_location(cards,query,mid_index)
+        result = test_location(cards, query, mid_index)
 
         if result == 'found':
             return mid_index
@@ -160,6 +161,7 @@ def locate_card3(cards,query):
             low = mid_index + 1
 
     return -1
+
 
 # evaluate_test_cases(locate_card3,tests)
 
@@ -175,9 +177,8 @@ large_test = {
 # evaluate_test_case(locate_card2,large_test)
 
 # Tested with large list (large_test):
-    # Linear Search Execution time: 1261.545 ms
-    # Binary Search Execution time: 0.014 ms
-
+# Linear Search Execution time: 1261.545 ms
+# Binary Search Execution time: 0.014 ms
 
 
 # Binary Search with ascending sorted list
@@ -190,11 +191,79 @@ find the starting and ending position of a given number.
 ascending_sorted = [
     {'input': {'cards': [5, 7, 7, 8, 8, 10], 'query': 7}, 'output': (1, 2)},
     {'input': {'cards': [0, 1, 3, 4, 7, 10, 10, 11, 13], 'query': 10}, 'output': (5, 6)},
-    {'input': {'cards': [-1, 1, 2, 4], 'query': 4}, 'output': (3,3)},
-    {'input': {'cards': [-127, -9, -1, 3], 'query': -127}, 'output': (0,0)},
-    {'input': {'cards': [6], 'query': 6}, 'output': (0,0)},
-    {'input': {'cards': [-9, 2, 5, 7, 9], 'query': 4}, 'output': (-1,-1)},
-    {'input': {'cards': [], 'query': 7}, 'output': (-1,-1)},
-    {'input': {'cards': [0, 0, 0, 2, 2, 2, 3, 6, 6, 6, 6, 6, 8, 8], 'query': 3}, 'output': (6,6)},
-    {'input': {'cards': [0, 0, 0, 2, 2, 2, 3, 6, 6, 6, 6, 6, 6, 8, 8], 'query': 6}, 'output': (7,12)}
+    {'input': {'cards': [-1, 1, 2, 4], 'query': 4}, 'output': (3, 3)},
+    {'input': {'cards': [-127, -9, -1, 3], 'query': -127}, 'output': (0, 0)},
+    {'input': {'cards': [6], 'query': 6}, 'output': (0, 0)},
+    {'input': {'cards': [-9, 2, 5, 7, 9], 'query': 4}, 'output': (-1, -1)},
+    {'input': {'cards': [], 'query': 7}, 'output': (-1, -1)},
+    {'input': {'cards': [0, 0, 0, 2, 2, 2, 3, 6, 6, 6, 6, 6, 8, 8], 'query': 3}, 'output': (6, 6)},
+    {'input': {'cards': [0, 0, 0, 2, 2, 2, 3, 6, 6, 6, 6, 6, 6, 8, 8], 'query': 6}, 'output': (7, 12)}
 ]
+
+# Generic method
+"""
+## Generic Binary Search
+
+Here is the general strategy behind binary search, which is applicable to a variety of problems:
+
+1. Come up with a condition to determine whether the answer lies before, after or at a given position
+1. Retrieve the midpoint and the middle element of the list.
+2. If it is the answer, return the middle position as the answer.
+3. If answer lies before it, repeat the search with the first half of the list
+4. If the answer lies after it, repeat the search with the second half of the list.
+
+Here is the generic algorithm for binary search, implemented in Python:
+"""
+
+
+def binary_search(low, high, condition):
+    while low <= high:
+        mid_index = (low + high) // 2
+        result = condition(mid_index)
+        if result == 'found':
+            return mid_index
+        elif result == 'left':
+            high = mid_index - 1
+        elif result == "right":
+            low = mid_index + 1
+
+    return -1
+
+
+def first_location(cards, query):
+    def condition(mid):
+        if cards[mid] == query:
+            if mid > 0 and cards[mid-1]  == query:
+                return 'left'
+            return 'found'
+        elif cards[mid] < query:
+            return 'right'
+        else:
+            return 'left'
+
+    return binary_search(0, len(cards) - 1, condition)
+
+
+def last_location(cards, query):
+    def condition(mid):
+        if cards[mid] == query:
+            if mid < len(cards) - 1 and cards[mid + 1] == query:
+                return 'right'
+            return 'found'
+        elif cards[mid] < query:
+            return 'right'
+        else:
+            return 'left'
+
+    return binary_search(0, len(cards) - 1, condition)
+
+
+def first_and_last_location(cards,query):
+    return first_location(cards,query),last_location(cards,query)
+
+
+for itr in ascending_sorted:
+    cards = itr['input']['cards']
+    query = itr['input']['query']
+    ans = first_and_last_location(cards,query)
+    print(f"cards: {cards} | query: {query} | ans: {ans}")

@@ -518,11 +518,11 @@ asscending_sorted = [
     {'input': {'cards': [0, 0, 0, 2, 2, 2, 3, 6, 6, 6, 6, 6, 6, 8, 8], 'query': 6}, 'output': (7,12)}
 ]
 
-# for itr in asscending_sorted:
-#     cards = itr['input']['cards']
-#     query = itr['input']['query']
-#     ans = first_and_last_position(cards,query)
-#     print(f"cards: {cards} | query: {query} | ans: {ans}")
+for itr in asscending_sorted:
+    cards = itr['input']['cards']
+    query = itr['input']['query']
+    ans = first_and_last_position(cards,query)
+    print(f"cards: {cards} | query: {query} | ans: {ans}")
 
 
 """

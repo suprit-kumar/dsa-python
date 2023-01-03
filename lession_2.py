@@ -1,5 +1,8 @@
 # Binary Search Trees, Traversals and Balancing in Python
 
+# https://jovian.ai/learn/data-structures-and-algorithms-in-python/lesson/lesson-2-binary-search-trees-traversals-and-balancing
+
+
 """
 ## Problem
 
@@ -137,22 +140,22 @@ vishal = User('vishal', 'Vishal Goel', 'vishal@example.com')
 
 users = [aakash, biraj, hemanth, jadhesh, siddhant, sonaksh, vishal]
 
-database = UserDatabase()
-database.insert(hemanth)
-database.insert(aakash)
-database.insert(siddhant)
-database.insert(vishal)
-print(database.list_all())
-database.insert(biraj)
-print(database.list_all())
-
-user = database.find('siddhant')
-print(user)
-database.update(User('siddhant', 'Siddhant U', 'siddhant@example.com'))
-user = database.find('siddhant')
+# database = UserDatabase()
+# database.insert(hemanth)
+# database.insert(aakash)
+# database.insert(siddhant)
+# database.insert(vishal)
+# print(database.list_all())
+# database.insert(biraj)
+# print(database.list_all())
+#
+# user = database.find('siddhant')
 # print(user)
-database.remove(User('siddhant', 'Siddhant U', 'siddhant@example.com'))
-print(database.list_all())
+# database.update(User('siddhant', 'Siddhant U', 'siddhant@example.com'))
+# user = database.find('siddhant')
+# # print(user)
+# database.remove(User('siddhant', 'Siddhant U', 'siddhant@example.com'))
+# print(database.list_all())
 
 
 
@@ -186,3 +189,140 @@ It takes almost 10 seconds to execute all the iterations in the above cell.
 As a senior backend engineer, you must come up with a more efficient data structure! Choosing the right data structure for the requirements at hand is an important skill. It's apparent that a sorted list of users might not be the best data structure to organize profile information for millions of users. 
 
 """
+
+
+"""
+## 6. Apply the right technique to overcome the inefficiency
+
+We can limit the number of iterations required for common operations like find, insert and update by organizing our data in the following structure, called a **binary tree**:
+
+<img src="https://i.imgur.com/lVqP63n.png" width="520">
+
+
+
+It's called a tree because it vaguely like an inverted tree trunk with branches. 
+* The word "binary" indicates that each "node" in the tree can have at most 2 children (left or right). 
+* Nodes can have 0, 1 or 2 children. Nodes that do not have any children are sometimes also called "leaves".
+* The single node at the top is called the "root" node, and it typically where operations like search, insertion etc. begin.
+
+<img src="https://i.imgur.com/TZHMKJr.png" width="400">
+
+
+## Balanced Binary Search Trees
+
+<img src="https://i.imgur.com/Mqef5b3.png" width="520">
+
+For our use case, we require the binary tree to have some additional properties:
+
+1. **Keys and Values**: Each node of the tree stores a key (a username) and a value (a `User` object). 
+Only keys are shown in the picture above for brevity. 
+A binary tree where nodes have both a key and a value is often referred to as a **map** or **treemap** (because it maps keys to values).
+
+2. **Binary Search Tree**: The *left subtree* of any node only contains nodes with keys that are lexicographically 
+smaller than the node's key, and the *right subtree* of any node only contains nodes with keys that lexicographically 
+larger than the node's key. A tree that satisfies this property is called a **binary search trees**, 
+and it's easy to locate a specific key by traversing a single path down from the root note.
+
+
+3. **Balanced Tree**: The tree is **balanced** i.e. it does not skew too heavily to one side or the other. 
+The left and right subtrees of any node shouldn't differ in height/depth by more than 1 level.
+
+
+### Height of a Binary Tree
+
+The number of levels in a tree is called its height. As you can tell from the picture above, 
+each level of a tree contains twice as many nodes as the previous level. 
+
+For a tree of height `k`, here's a list of the number of nodes at each level:
+
+Level 0: `1`
+
+Level 1: `2`
+
+Level 2: `4` i.e. `2^2`
+
+Level 3: `8` i.e. `2^3`
+
+...
+
+Level k-1: `2^(k-1)`
+
+If the total number of nodes in the tree is `N`, then it follows that
+
+```
+N = 1 + 2^1 + 2^2 + 2^3 + ... + 2^(k-1)
+```
+
+
+We can simplify this equation by adding `1` on each side:
+
+```
+N + 1 = 1 + 1 + 2^1 + 2^2 + 2^3 + ... + 2^(k-1) 
+
+N + 1 = 2^1 + 2^1 + 2^2+ 2^3 + ... + 2^(k-1) 
+
+N + 1 = = 2^2 + 2^2 + 2^3 + ... + 2^(k-1)
+
+N + 1 = = 2^3 + 2^3 + ... + 2^(k-1)
+
+...
+
+N + 1 = 2^(k-1) + 2^(k-1)
+
+N + 1 = 2^k
+
+k = log(N + 1) <= log(N) + 1 
+
+```
+
+Thus, to store `N` records we require a balanced binary search tree (BST) of height no larger than `log(N) + 1`. 
+This is a very useful property, in combination with the fact that nodes are arranged in a way that makes it easy to find a specific key by 
+following a single path down from the root. 
+
+As we'll see soon, the `insert`, `find` and `update` operations in a balanced BST have time complexity `O(log N)` 
+since they all involve traversing a single path down from the root of the tree.
+
+
+
+"""
+
+
+
+"""
+## Binary Tree
+
+> **QUESTION 2**: Implement a binary tree using Python, and show its usage with some examples.
+
+To begin, we'll create simple binary tree (without any of the additional properties) containing numbers as keys within nodes. Here's an example:
+
+<img src="https://i.imgur.com/hg2ZG5h.png" width="240">
+
+Here's a simple class representing a node within a binary tree.
+
+"""
+
+
+class TreeNode:
+    def __init__(self,key):
+        self.key = key
+        self.left = None
+        self.right = None
+
+
+node0 = TreeNode(3)
+node1 = TreeNode(4)
+node2 = TreeNode(5)
+
+
+
+# print(node0)
+# print(node0.key)
+# print(node0.left)
+
+node0.left = node1
+node0.right = node2
+
+tree = node0
+print(tree.key)
+print(tree.left.key)
+print(tree.right.key)

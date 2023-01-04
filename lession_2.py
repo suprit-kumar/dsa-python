@@ -308,10 +308,14 @@ class TreeNode:
         self.left = None
         self.right = None
 
+    def __repr__(self):
+        return f"(left: {self.left} | key: {self.key} | right:{self.right})"
 
-node0 = TreeNode(3)
-node1 = TreeNode(4)
-node2 = TreeNode(5)
+    def __str__(self):
+        return self.__repr__()
+# node0 = TreeNode(3)
+# node1 = TreeNode(4)
+# node2 = TreeNode(5)
 
 
 
@@ -319,10 +323,62 @@ node2 = TreeNode(5)
 # print(node0.key)
 # print(node0.left)
 
-node0.left = node1
-node0.right = node2
+# node0.left = node1
+# node0.right = node2
+#
+# tree = node0
+# print(tree.key)
+# print(tree.left.key)
+# print(tree.right.key)
 
-tree = node0
-print(tree.key)
-print(tree.left.key)
-print(tree.right.key)
+
+
+tree_tuple = ((1,3,None), 2, ((None, 3, 4), 5, (6, 7, 8)))
+
+# Helper function to create Tree
+
+def parse_tuple(data):
+    if isinstance(data,tuple) and len(data)==3:
+        node = TreeNode(data[1])
+        node.left = parse_tuple(data[0])
+        node.right = parse_tuple(data[2])
+    elif data is None:
+        node = None
+    else:
+        node = TreeNode(data)
+    return node
+
+# tree2 = parse_tuple(tree_tuple)
+#
+# print(tree2.key)
+# print(tree2.left.key, tree2.right.key)
+# print(tree2.left.left.key, tree2.left.right, tree2.right.left.key, tree2.right.right.key)
+# print(tree2.right.left.right.key, tree2.right.right.left.key, tree2.right.right.right.key)
+
+
+"""
+**Exercise:** 
+Define a function `tree_to_tuple` that converts a binary tree into a tuple representing the same tree. 
+E.g. `tree_to_tuple` converts the tree created above to the tuple `((1, 3, None), 2, ((None, 3, 4), 5, (6, 7, 8)))`. 
+*Hint*: Use recursion.
+"""
+
+
+def tree_to_tuple(nodes):
+    if isinstance(nodes,tuple) and len(nodes) == 3:
+        node = TreeNode(nodes[1])
+        node.left = tree_to_tuple(nodes[0])
+        node.right = tree_to_tuple(nodes[2])
+    elif nodes is None:
+        node = None
+    else:
+        node = TreeNode(nodes)
+
+    return node
+top = ((1, 3, None), 2, ((None, 3, 4), 5, (6, 7, 8)))
+tree3 = tree_to_tuple(top)
+
+print(tree3.key)
+print(tree3.left.key, tree3.right.key)
+print(tree3.left.left.key, tree3.left.right, tree3.right.left.key, tree3.right.right.key)
+print(tree3.right.left.right.key, tree3.right.right.left.key, tree3.right.right.right.key)

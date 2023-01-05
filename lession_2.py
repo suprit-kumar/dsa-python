@@ -158,7 +158,6 @@ users = [aakash, biraj, hemanth, jadhesh, siddhant, sonaksh, vishal]
 # print(database.list_all())
 
 
-
 """
 ## 5. Analyze the algorithm's complexity and identify inefficiencies for the above solution
 
@@ -189,7 +188,6 @@ It takes almost 10 seconds to execute all the iterations in the above cell.
 As a senior backend engineer, you must come up with a more efficient data structure! Choosing the right data structure for the requirements at hand is an important skill. It's apparent that a sorted list of users might not be the best data structure to organize profile information for millions of users. 
 
 """
-
 
 """
 ## 6. Apply the right technique to overcome the inefficiency
@@ -286,8 +284,6 @@ since they all involve traversing a single path down from the root of the tree.
 
 """
 
-
-
 """
 ## Binary Tree
 
@@ -303,7 +299,7 @@ Here's a simple class representing a node within a binary tree.
 
 
 class TreeNode:
-    def __init__(self,key):
+    def __init__(self, key):
         self.key = key
         self.left = None
         self.right = None
@@ -313,10 +309,11 @@ class TreeNode:
 
     def __str__(self):
         return self.__repr__()
+
+
 # node0 = TreeNode(3)
 # node1 = TreeNode(4)
 # node2 = TreeNode(5)
-
 
 
 # print(node0)
@@ -332,13 +329,13 @@ class TreeNode:
 # print(tree.right.key)
 
 
+tree_tuple = ((1, 3, None), 2, ((None, 3, 4), 5, (6, 7, 8)))
 
-tree_tuple = ((1,3,None), 2, ((None, 3, 4), 5, (6, 7, 8)))
 
 # Helper function to create Tree
 
 def parse_tuple(data):
-    if isinstance(data,tuple) and len(data)==3:
+    if isinstance(data, tuple) and len(data) == 3:
         node = TreeNode(data[1])
         node.left = parse_tuple(data[0])
         node.right = parse_tuple(data[2])
@@ -347,6 +344,7 @@ def parse_tuple(data):
     else:
         node = TreeNode(data)
     return node
+
 
 # tree2 = parse_tuple(tree_tuple)
 #
@@ -364,21 +362,42 @@ E.g. `tree_to_tuple` converts the tree created above to the tuple `((1, 3, None)
 """
 
 
-def tree_to_tuple(nodes):
-    if isinstance(nodes,tuple) and len(nodes) == 3:
-        node = TreeNode(nodes[1])
-        node.left = tree_to_tuple(nodes[0])
-        node.right = tree_to_tuple(nodes[2])
-    elif nodes is None:
-        node = None
+def tree_to_tuple(node):
+    if isinstance(node, TreeNode):
+        # check if left and right node are equal to None if so, then it means it has no child nodes
+        # and simply just return key node
+        if node.left is None and node.right is None:
+            return node.key
+        # use recursion to iterate through each subtree and get the left , key and right nodes
+        return tree_to_tuple(node.left), node.key, tree_to_tuple(node.right)
     else:
-        node = TreeNode(nodes)
+        return node
 
-    return node
-top = ((1, 3, None), 2, ((None, 3, 4), 5, (6, 7, 8)))
-tree3 = tree_to_tuple(top)
 
-print(tree3.key)
-print(tree3.left.key, tree3.right.key)
-print(tree3.left.left.key, tree3.left.right, tree3.right.left.key, tree3.right.right.key)
-print(tree3.right.left.right.key, tree3.right.right.left.key, tree3.right.right.right.key)
+tree3 = parse_tuple(tree_tuple)
+print(tree_to_tuple(tree3))
+
+
+# Let's create another helper function to display all the keys in a tree-like structure for easier visualization.
+
+def display_keys(node, space='\t', level=0):
+    # print(node.key if node else None, level)
+
+    # If the node is empty
+    if node is None:
+        print(space * level + '∅')
+        return
+
+        # If the node is a leaf
+    if node.left is None and node.right is None:
+        print(space * level + str(node.key))
+        return
+
+    # If the node has children
+    display_keys(node.right, space, level + 1)
+    print(space * level + str(node.key))
+    display_keys(node.left, space, level + 1)
+
+
+display_keys(tree3,space='  ')
+

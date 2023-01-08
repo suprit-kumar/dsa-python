@@ -401,3 +401,4 @@ def display_keys(node, space='\t', level=0):
 
 display_keys(tree3,space='  ')
 
+# Lession 2 to be continue later after understanding recursion

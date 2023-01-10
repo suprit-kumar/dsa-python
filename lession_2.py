@@ -346,7 +346,7 @@ def parse_tuple(data):
     return node
 
 
-# tree2 = parse_tuple(tree_tuple)
+tree2 = parse_tuple(tree_tuple)
 #
 # print(tree2.key)
 # print(tree2.left.key, tree2.right.key)
@@ -374,8 +374,8 @@ def tree_to_tuple(node):
         return node
 
 
-tree3 = parse_tuple(tree_tuple)
-print(tree_to_tuple(tree3))
+# tree3 = parse_tuple(tree_tuple)
+# print(tree_to_tuple(tree3))
 
 
 # Let's create another helper function to display all the keys in a tree-like structure for easier visualization.
@@ -399,6 +399,71 @@ def display_keys(node, space='\t', level=0):
     display_keys(node.left, space, level + 1)
 
 
-display_keys(tree3,space='  ')
+# display_keys(tree3,space='  ')
 
-# Lession 2 to be continue later after understanding recursion
+
+
+
+
+# def traverse_in_order(node):
+#     if node is None:
+#         return []
+#     return(traverse_in_order(node.left) +
+#            [node.key] +
+#            traverse_in_order(node.right))
+
+
+# print(traverse_in_order(tree2))
+
+
+
+def traverse_in_order(node):
+    if node is None:
+        return []
+    left = traverse_in_order(node.left)
+    root = [node.key]
+    right = traverse_in_order(node.right)
+
+    return left + root + right # concatenate the lists
+
+print('In-order',traverse_in_order(tree2))
+
+
+def traverse_pre_order(node):
+    # if node is None:
+    #     return
+    # print(node.key,end=" ")
+    # traverse_pre_order(node.left)
+    # traverse_pre_order(node.right)
+
+    if node is None:
+        return []
+    root = [node.key]
+    left = traverse_pre_order(node.left)
+    right = traverse_pre_order(node.right)
+
+    return root + left + right
+
+# traverse_pre_order(tree2)
+print('Pre-order',traverse_pre_order(tree2))
+
+def traverse_post_order(node):
+    if node is None:
+        return
+
+    traverse_post_order(node.left)
+    traverse_post_order(node.right)
+    print(node.key, end=" ")
+
+    # if node is None:
+    #     return []
+    #
+    # left = traverse_post_order(node.left)
+    # right = traverse_post_order(node.right)
+    # root = [node.key]
+    #
+    # return  left + right + root
+
+
+traverse_post_order(tree2)
+# print(traverse_post_order(tree2))

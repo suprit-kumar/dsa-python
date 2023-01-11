@@ -402,9 +402,6 @@ def display_keys(node, space='\t', level=0):
 # display_keys(tree3,space='  ')
 
 
-
-
-
 # def traverse_in_order(node):
 #     if node is None:
 #         return []
@@ -416,20 +413,28 @@ def display_keys(node, space='\t', level=0):
 # print(traverse_in_order(tree2))
 
 
-
 def traverse_in_order(node):
+    """
+    :param node:
+    output : left node, root , right node
+    """
     if node is None:
         return []
     left = traverse_in_order(node.left)
     root = [node.key]
     right = traverse_in_order(node.right)
 
-    return left + root + right # concatenate the lists
+    return left + root + right  # concatenate the lists
 
-print('In-order',traverse_in_order(tree2))
+
+print('In-order', traverse_in_order(tree2))
 
 
 def traverse_pre_order(node):
+    """
+     :param node:
+     output : root, left node, right node
+     """
     # if node is None:
     #     return
     # print(node.key,end=" ")
@@ -444,10 +449,16 @@ def traverse_pre_order(node):
 
     return root + left + right
 
+
 # traverse_pre_order(tree2)
-print('Pre-order',traverse_pre_order(tree2))
+print('Pre-order', traverse_pre_order(tree2))
+
 
 def traverse_post_order(node):
+    """
+     :param node:
+     output : left node, right node, root
+     """
     if node is None:
         return
 
@@ -465,5 +476,43 @@ def traverse_post_order(node):
     # return  left + right + root
 
 
-traverse_post_order(tree2)
+# traverse_post_order(tree2)
 # print(traverse_post_order(tree2))
+
+
+def count_of_nodes(node):
+    if node is None:
+        return 0
+    leftNodes = count_of_nodes(node.left)
+    rightNodes = count_of_nodes(node.right)
+
+    return leftNodes + rightNodes + 1
+
+
+print('Count of nodes: ', count_of_nodes(tree2))
+
+
+def sum_of_nodes(node):
+    if node is None:
+        return 0
+    leftSum = sum_of_nodes(node.left)
+    rightSum = sum_of_nodes(node.right)
+
+    return leftSum + rightSum + node.key
+
+
+print(f"Sum of Nodes: ", sum_of_nodes(tree2))
+
+
+def height_of_tree(node):
+    if node is None:
+        return 0
+    leftHeight = height_of_tree(node.left)
+    rightHeight = height_of_tree(node.right)
+
+    myHeight = max(leftHeight,rightHeight) + 1
+
+    return myHeight
+
+
+print("Height of Tree: ",height_of_tree(tree2))

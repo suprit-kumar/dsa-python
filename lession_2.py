@@ -95,6 +95,7 @@ class User:
         return self.__repr__()
 
 
+
 # 'biraj' < 'aakash' - False (Lexico graphic comparison)
 # 'biraj' < 'hemanth' - True (Lexico graphic comparison)
 
@@ -298,17 +299,17 @@ Here's a simple class representing a node within a binary tree.
 """
 
 
-class TreeNode:
-    def __init__(self, key):
-        self.key = key
-        self.left = None
-        self.right = None
-
-    def __repr__(self):
-        return f"(left: {self.left} | key: {self.key} | right:{self.right})"
-
-    def __str__(self):
-        return self.__repr__()
+# class TreeNode:
+#     def __init__(self, key):
+#         self.key = key
+#         self.left = None
+#         self.right = None
+#
+#     def __repr__(self):
+#         return f"(left: {self.left} | key: {self.key} | right:{self.right})"
+#
+#     def __str__(self):
+#         return self.__repr__()
 
 
 # node0 = TreeNode(3)
@@ -346,7 +347,7 @@ def parse_tuple(data):
     return node
 
 
-tree2 = parse_tuple(tree_tuple)
+# tree2 = parse_tuple(tree_tuple)
 #
 # print(tree2.key)
 # print(tree2.left.key, tree2.right.key)
@@ -427,7 +428,7 @@ def traverse_in_order(node):
     return left + root + right  # concatenate the lists
 
 
-print('In-order', traverse_in_order(tree2))
+# print('In-order', traverse_in_order(tree2))
 
 
 def traverse_pre_order(node):
@@ -451,7 +452,7 @@ def traverse_pre_order(node):
 
 
 # traverse_pre_order(tree2)
-print('Pre-order', traverse_pre_order(tree2))
+# print('Pre-order', traverse_pre_order(tree2))
 
 
 def traverse_post_order(node):
@@ -459,25 +460,25 @@ def traverse_post_order(node):
      :param node:
      output : left node, right node, root
      """
-    if node is None:
-        return
-
-    traverse_post_order(node.left)
-    traverse_post_order(node.right)
-    print(node.key, end=" ")
-
     # if node is None:
-    #     return []
+    #     return
     #
-    # left = traverse_post_order(node.left)
-    # right = traverse_post_order(node.right)
-    # root = [node.key]
-    #
-    # return  left + right + root
+    # traverse_post_order(node.left)
+    # traverse_post_order(node.right)
+    # print(node.key, end=" ")
+
+    if node is None:
+        return []
+
+    left = traverse_post_order(node.left)
+    right = traverse_post_order(node.right)
+    root = [node.key]
+
+    return left + right + root
 
 
 # traverse_post_order(tree2)
-# print(traverse_post_order(tree2))
+# print('Post order: ',traverse_post_order(tree2))
 
 
 def count_of_nodes(node):
@@ -489,7 +490,7 @@ def count_of_nodes(node):
     return leftNodes + rightNodes + 1
 
 
-print('Count of nodes: ', count_of_nodes(tree2))
+# print('Count of nodes: ', count_of_nodes(tree2))
 
 
 def sum_of_nodes(node):
@@ -501,7 +502,7 @@ def sum_of_nodes(node):
     return leftSum + rightSum + node.key
 
 
-print(f"Sum of Nodes: ", sum_of_nodes(tree2))
+# print(f"Sum of Nodes: ", sum_of_nodes(tree2))
 
 
 def height_of_tree(node):
@@ -510,9 +511,116 @@ def height_of_tree(node):
     leftHeight = height_of_tree(node.left)
     rightHeight = height_of_tree(node.right)
 
-    myHeight = max(leftHeight,rightHeight) + 1
+    myHeight = max(leftHeight, rightHeight) + 1
 
     return myHeight
 
 
-print("Height of Tree: ",height_of_tree(tree2))
+# print("Height of Tree: ",height_of_tree(tree2))
+
+
+class TreeNode():
+    def __init__(self, key):
+        self.key = key
+        self.left = None
+        self.right = None
+
+    def height_of_tree(self):
+        if self is None:
+            return 0
+        leftHeight = height_of_tree(self.left)
+        rightHeight = height_of_tree(self.right)
+        myHeight = max(leftHeight, rightHeight) + 1
+        return myHeight
+
+    def sum_of_nodes(self):
+        if self is None:
+            return 0
+        leftSum = sum_of_nodes(self.left)
+        rightSum = sum_of_nodes(self.right)
+        return leftSum + rightSum + self.key
+
+    def count_of_nodes(self):
+        if self is None:
+            return 0
+        leftNodes = count_of_nodes(self.left)
+        rightNodes = count_of_nodes(self.right)
+
+        return leftNodes + rightNodes + 1
+
+    def traverse_in_order(self):
+        if self is None:
+            return []
+        left = traverse_in_order(self.left)
+        root = [self.key]
+        right = traverse_in_order(self.right)
+        return left + root + right
+
+    def traverse_pre_order(self):
+        if self is None:
+            return []
+        root = [self.key]
+        left = traverse_pre_order(self.left)
+        right = traverse_pre_order(self.right)
+        return root + left + right
+
+    def traverse_post_order(self):
+        if self is None:
+            return []
+        left = traverse_post_order(self.left)
+        right = traverse_post_order(self.right)
+        root = [self.key]
+        return left + right + root
+
+    def display_keys(self, space='\t', level=0):
+        # print(node.key if node else None, level)
+
+        # If the node is empty
+        if self is None:
+            print(space * level + '∅')
+            return
+
+            # If the node is a leaf
+        if self.left is None and self.right is None:
+            print(space * level + str(self.key))
+            return
+
+        # If the node has children
+        display_keys(self.right, space, level + 1)
+        print(space * level + str(self.key))
+        display_keys(self.left, space, level + 1)
+
+    def to_tuple(self):
+        if self is None:
+            return None
+        if self.left is None and self.right is None:
+            return self.key
+        return TreeNode.to_tuple(self.left),  self.key, TreeNode.to_tuple(self.right)
+
+    def __str__(self):
+        return "BinaryTree <{}>".format(self.to_tuple())
+
+    def __repr__(self):
+        return "BinaryTree <{}>".format(self.to_tuple())
+
+    @staticmethod
+    def parse_tuple(data):
+        if isinstance(data, tuple) and len(data) == 3:
+            node = TreeNode(data[1])
+            node.left = parse_tuple(data[0])
+            node.right = parse_tuple(data[2])
+        elif data is None:
+            node = None
+        else:
+            node = TreeNode(data)
+        return node
+
+
+tree_test = TreeNode.parse_tuple(tree_tuple)
+# tree_test.display_keys(space=' ')
+print(tree_test.to_tuple())
+print(tree_test.height_of_tree())
+print(tree_test.traverse_in_order())
+
+
+
